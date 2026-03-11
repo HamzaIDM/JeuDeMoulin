@@ -3,9 +3,9 @@
 > A fully functional Nine Men's Morris game engine built in C, featuring a complete rule system and an AI opponent powered by the Minimax algorithm with Alpha-Beta pruning.
 
 **Built at:** Ecole Hassania des Travaux Publics (EHTP) — Advanced Algorithmics & Game Theory  
-**Language:** C (C99/C11 standard)  
-**Authors:**  IDRISSI MELIANI Hamza and TAQI Youssef
 **Organization:** Hassania IT Club (H.I.T.C)  
+**Language:** C 
+**Authors:**  IDRISSI MELIANI Hamza and TAQI Youssef 
 **Year:** 2025–2026
 
 ---
