@@ -49,13 +49,12 @@ This project implements the full game logic in C — including all three phases 
 ```
 projet_moulin/
 │
-├── src/
-│   ├── main.c          # Entry point — game mode selection & main loop
-│   ├── functions.c     # All game logic: board, rules, phases, AI
-│   └── prototype.h     # All declarations, structs, and constants
+│── main.c          # Entry point — game mode selection & main loop
+│── functions.c     # All game logic: board, rules, phases, AI
+│── prototype.h     # All declarations, structs, and constants
 │
-├── README.md           # This file
-└── Makefile            # Compilation instructions
+├── README.md       # This file
+└── Makefile        # Compilation instructions
 ```
 
 > **Note:** The entire logic is organized across 3 files: `prototype.h` for declarations, `functions.c` for all implementations, and `main.c` as the entry point.
