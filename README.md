@@ -5,6 +5,7 @@
 **Built at:** Ecole Hassania des Travaux Publics (EHTP) — Advanced Algorithmics & Game Theory  
 **Language:** C (C99/C11 standard)  
 **Authors:**  IDRISSI MELIANI Hamza and TAQI Youssef
+
 **Organization:** Hassania IT Club (H.I.T.C)  
 **Year:** 2025–2026
 
@@ -165,8 +166,3 @@ A player **loses** if:
 - All their pieces are blocked with no valid moves
 
 ---
-
-## Live Simulation
-
-> This project is part of the Hassania IT Club (H.I.T.C) 2024–2025 project series.  
-> Cahier des charges provided by: **Daifi Fatima Zahra**, Hassania IT Club.
