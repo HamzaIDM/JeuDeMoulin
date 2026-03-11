@@ -5,7 +5,6 @@
 **Built at:** Ecole Hassania des Travaux Publics (EHTP) — Advanced Algorithmics & Game Theory  
 **Language:** C (C99/C11 standard)  
 **Authors:**  IDRISSI MELIANI Hamza and TAQI Youssef
-
 **Organization:** Hassania IT Club (H.I.T.C)  
 **Year:** 2025–2026
 
