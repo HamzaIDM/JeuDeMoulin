@@ -417,8 +417,8 @@ void afficherPlateau(const Plateau *P)
                     /* Pion selectionne : fond BLEU CIEL */
                     printf(BG_CYN BLK);
                 } else if (P->Case[cas] == J1) {
-                    /* Pion Joueur 1 : fond ROUGE */
-                    printf(BG_RED WHT);
+                    /* Pion Joueur 1 : fond BLEU CIEL */
+                    printf(BG_CYN BLK);
                 } else if (P->Case[cas] == J2) {
                     /* Pion adverse (autre joueur) : fond JAUNE */
                     printf(BG_YEL BLK);
@@ -787,7 +787,7 @@ static void afficherInfoJeu(const Jeu *j)
     printf(CYN "Phase : %s" COLOR_RESET, phases[j->phase]);
     printf(" | " YEL "Tour : %s\n" COLOR_RESET, j->J[j->JoueurCourant].Nom);
 
-    printf("Joueur 1 [" BG_RED WHT "1" COLOR_RESET "] "
+    printf("Joueur 1 [" BG_CYN BLK "1" COLOR_RESET "] "
            ": %d en main, %d sur plateau\n",
            j->J[0].nbrPionPlacer, j->J[0].nbrPionPlateau);
     printf("Joueur 2 [" BG_YEL BLK "2" COLOR_RESET "] "
