@@ -414,14 +414,14 @@ void afficherPlateau(const Plateau *P)
 
                 /* Choisir la couleur selon l'etat */
                 if (cas == caseSelectionnee) {
-                    /* Pion selectionne : fond VERT vif */
-                    printf(BG_GRN BLK);
+                    /* Pion selectionne : fond BLEU CIEL */
+                    printf(BG_CYN BLK);
                 } else if (P->Case[cas] == J1) {
-                    /* Pion Joueur 1 : fond JAUNE */
-                    printf(BG_YEL BLK);
+                    /* Pion Joueur 1 : fond ROUGE */
+                    printf(BG_RED WHT);
                 } else if (P->Case[cas] == J2) {
-                    /* Pion Joueur 2 : fond BLEU */
-                    printf(BG_BLU WHT);
+                    /* Pion adverse (autre joueur) : fond JAUNE */
+                    printf(BG_YEL BLK);
                 }
                 /* Cas vide : pas de fond, on imprime normalement */
 
@@ -787,10 +787,10 @@ static void afficherInfoJeu(const Jeu *j)
     printf(CYN "Phase : %s" COLOR_RESET, phases[j->phase]);
     printf(" | " YEL "Tour : %s\n" COLOR_RESET, j->J[j->JoueurCourant].Nom);
 
-    printf("Joueur 1 [" BG_YEL BLK "1" COLOR_RESET "] "
+    printf("Joueur 1 [" BG_RED WHT "1" COLOR_RESET "] "
            ": %d en main, %d sur plateau\n",
            j->J[0].nbrPionPlacer, j->J[0].nbrPionPlateau);
-    printf("Joueur 2 [" BG_BLU WHT "2" COLOR_RESET "] "
+    printf("Joueur 2 [" BG_YEL BLK "2" COLOR_RESET "] "
            ": %d en main, %d sur plateau\n\n",
            j->J[1].nbrPionPlacer, j->J[1].nbrPionPlateau);
 }
@@ -800,7 +800,7 @@ static void afficherInfoJeu(const Jeu *j)
    ===================================================================== */
 
 /*
- * Affiche le plateau avec le pion selectionne surligne en vert,
+ * Affiche le plateau avec le pion selectionne surligne en bleu ciel,
  * et liste les destinations valides en dessous.
  */
 static void afficherSelectionPion(const Jeu *j, int de)
@@ -810,10 +810,10 @@ static void afficherSelectionPion(const Jeu *j, int de)
 
     system("cls");
     afficherInfoJeu(j);       /* en-tete : phase, tour, compteurs        */
-    afficherPlateau(&j->P);   /* plateau avec le pion [!] surligne en vert */
+    afficherPlateau(&j->P);   /* plateau avec le pion selectionne surligne en bleu ciel */
 
     /* Legende */
-    printf(BG_GRN BLK " %d " COLOR_RESET " = pion selectionne\n\n", de);
+    printf(BG_CYN BLK " %d " COLOR_RESET " = pion selectionne\n\n", de);
 
     if (vol) {
         printf(CYN "  Regle du VOL : vous pouvez aller sur n'importe quelle case vide.\n"
