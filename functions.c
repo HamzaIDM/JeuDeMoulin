@@ -31,8 +31,8 @@
  *  |   8-------9-------10  |
  *  |   |       |       |   |
  *  |   |  16--17--18   |   |
- *  7--15  |        |   11--3
- *  |   |  23--22--21   |   |
+ *  7--15--23       19--11--3
+ *  |   |  22--21--20   |   |
  *  |   |       |       |   |
  *  |   14------13------12  |
  *  |           |           |
@@ -197,8 +197,8 @@ void initPlateau(Plateau *P)
         "|   8-------9-------10  |",
         "|   |       |       |   |",
         "|   |  16--17--18   |   |",
-        "7--15  |        |   11--3",
-        "|   |  23--22--21   |   |",
+        "7--15--23       19--11--3",
+        "|   |  22--21--20   |   |",
         "|   |       |       |   |",
         "|   14------13------12  |",
         "|           |           |",
@@ -330,18 +330,18 @@ void SupprimerPionPlateau(Plateau *P, int pos)
  *    case 17 -> col 11, width 2
  *    case 18 -> col 15, width 2
  *
- *  Row 5 : "7--15  |        |   11--3"
+ *  Row 5 : "7--15--23       19--11--3"
  *    case  7 -> col  0, width 1
- *    case 15 -> col  3, width 2  (posCol original = 4, i.e. le '5', corrige ici en 3)
- *    case 23 -> col  7, width 1  ('|' de la paroi gauche du carre interieur)
- *    case 19 -> col 16, width 1  ('|' de la paroi droite du carre interieur)
+ *    case 15 -> col  3, width 2
+ *    case 23 -> col  7, width 2
+ *    case 19 -> col 16, width 2
  *    case 11 -> col 20, width 2
  *    case  3 -> col 24, width 1
  *
- *  Row 6 : "|   |  23--22--21   |   |"
- *    case 22 -> col  7, width 2  (le template affiche "23" mais c'est la case 22)
- *    case 21 -> col 11, width 2  (le template affiche "22" -> case 21)
- *    case 20 -> col 15, width 2  (le template affiche "21" -> case 20)
+ *  Row 6 : "|   |  22--21--20   |   |"
+ *    case 22 -> col  7, width 2
+ *    case 21 -> col 11, width 2
+ *    case 20 -> col 15, width 2
  *
  *  Row 8 : "|   14------13------12  |"
  *    case 14 -> col  4, width 2
@@ -372,8 +372,8 @@ void afficherPlateau(const Plateau *P)
 
     /*
      * charWidth[i] = nombre de caracteres a surligner pour la case i.
-     *   1 = chiffre simple  (cases 0-9, plus 19 et 23 qui sont des '|')
-     *   2 = deux chiffres   (cases 10-18, 20-22)
+     *   1 = chiffre simple  (cases 0-9)
+     *   2 = deux chiffres   (cases 10-23)
      */
     static const int charWidth[24] = {
     /*  0  1  2  3  4  5  6  7  */
@@ -381,7 +381,7 @@ void afficherPlateau(const Plateau *P)
     /*  8  9 10 11 12 13 14 15  */
         1, 1, 2, 2, 2, 2, 2, 2,
     /* 16 17 18 19 20 21 22 23  */
-        2, 2, 2, 1, 2, 2, 2, 1
+        2, 2, 2, 2, 2, 2, 2, 2
     };
 
     /*
