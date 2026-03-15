@@ -22,7 +22,6 @@
 /*
  * Position de chaque case (0-23) dans la grille d'affichage.
  *   posLigne[i] = ligne  (0..10)
- *   posCol[i]   = colonne (0..24)
  *
  * Repère visuel du plateau :
  *
@@ -42,11 +41,6 @@ static const int posLigne[24] = {
      0,  0,  0,  5, 10, 10, 10,  5,
      2,  2,  2,  5,  8,  8,  8,  5,
      4,  4,  4,  5,  6,  6,  6,  5
-};
-static const int posCol[24] = {
-     0, 12, 24, 24, 24, 12,  0,  0,
-     4, 12, 20, 20, 20, 12,  4,  4,
-     8, 12, 16, 16, 16, 12,  8,  8
 };
 
 /* Case sélectionnée par le joueur humain (-1 = aucune) */
@@ -358,8 +352,6 @@ void afficherPlateau(const Plateau *P)
     /*
      * startCol[i] = colonne du 1er caractere du label de la case i
      * dans la chaine P->Pl[posLigne[i]].
-     *
-     * Differents de posCol[] qui pointe parfois sur le 2eme chiffre !
      */
     static const int startCol[24] = {
     /*  0   1   2   3   4   5   6   7  */
