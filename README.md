@@ -83,26 +83,6 @@ projet_moulin/
 - Linux / macOS / Windows with MinGW
 - A terminal that supports **ANSI escape codes** (color output)
 
-### Compile
-
-```bash
-make
-```
-
-Or manually:
-
-```bash
-gcc -Wall -Wextra -g -o moulin src/main.c src/functions.c
-```
-
-### Run
-
-```bash
-./moulin
-```
-
----
-
 ## How to Play
 
 On launch, you will see a colorized main menu:
