@@ -22,7 +22,11 @@
 #define Nbr_Moulin    16
 #define Max_Adjascent  4
 
-typedef enum { vide, J1, J2 } etatCase;
+typedef enum
+{
+    vide, J1, J2
+
+} etatCase;
 
 typedef struct
 {
@@ -33,7 +37,11 @@ typedef struct
     int      Moulin[Nbr_Moulin][3];
 } Plateau;
 
-typedef enum { humain, IA_simple, IA_difficile } typeJoueur;
+typedef enum
+{
+     humain, IA_simple, IA_difficile
+
+} typeJoueur;
 
 typedef struct
 {
@@ -44,7 +52,11 @@ typedef struct
     typeJoueur type;
 } Joueur;
 
-typedef enum { Placement, Deplacement, Vol } PhaseJeu;
+typedef enum
+{
+     Placement, Deplacement, Vol
+
+} PhaseJeu;
 
 typedef struct
 {
@@ -56,22 +68,22 @@ typedef struct
     int      Gagnant;
 } Jeu;
 
-/* Coup defini avant les prototypes qui l'utilisent */
+
 typedef struct
 {
-    int depart;   /* -1 si placement */
+    int depart;   // -1 si placement
     int arrivee;
-    int capture;  /* -1 si pas de capture */
+    int capture;  // -1 si pas de capture
 } Coup;
 
-/* Interface */
+// Interface
 void Nom_jeu(void);
 void menu(void);
 void regles(void);
 int  choix_mode(void);
 void Jouer(void);
 
-/* Plateau */
+// Plateau
 void initPlateau(Plateau *);
 int  PlateauEstVide(const Plateau *, int);
 void PlacerPionPlateau(Plateau *, int, etatCase);
@@ -79,11 +91,11 @@ void SupprimerPionPlateau(Plateau *, int);
 void afficherPlateau(const Plateau *);
 void afficherEtat(const Jeu *);
 
-/* Joueur */
+// Joueur
 void initJoueur(Joueur *, int, typeJoueur);
 int  nbrTotalePions(const Joueur *);
 
-/* Jeu */
+// Jeu
 void     initJeu(Jeu *, typeJoueur t1, typeJoueur t2);
 void     changerJoueurJeu(Jeu *);
 void     mettreAJourPhase(Jeu *);
@@ -93,20 +105,21 @@ void     tourHumainDeplacement(Jeu *);
 void     gererCapture(Jeu *);
 void     jouerPartie(Jeu *);
 
-/* Verification */
+// Verification
 int verifieMoulin(const Plateau *, int, etatCase);
 int mouvementValide(const Plateau *, int, int, etatCase);
 int Volvalide(const Plateau *, int, int, etatCase);
 int estCapturable(const Plateau *, int, etatCase);
 int verifierGagnant(const Jeu *);
-/* joueurBloque : 3 params, tient compte de la phase */
+
+// joueurBloque : 3 params, tient compte de la phase
 int joueurBloque(const Plateau *, etatCase, PhaseJeu);
 
-/* Conversion */
+// Conversion
 char positionVersLettre(int pos);
 int  lettreVersPosition(char lettre);
 
-/* IA difficile - Alpha-Beta */
+// IA difficile - Alpha-Beta
 void copierJeu(const Jeu *src, Jeu *dst);
 int  genererCoups(const Jeu *jeu, Coup coups[], int maxCoups);
 int  evaluerPlateau(const Jeu *jeu, int joueurIA);
