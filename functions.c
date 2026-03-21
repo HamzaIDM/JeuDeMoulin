@@ -158,19 +158,21 @@ int choix_mode()
     printf("\n\n");
     menu();
     do {
+
         printf("\nChoisir un nombre de la liste des choix: ");
         scanf("%d", &choix);
-        while(getchar() != '\n');
+        while(getchar() != '\n'); // vide le tampon d’entrée après scanf
+
     } while (choix < 1 || choix > 5);
     system("cls");
     return choix;
 }
 
-// ================================================================
+
 // saisirNoms : demande les noms des joueurs selon le mode de jeu
-//   avecDeuxJoueurs = 1 : Joueur VS Joueur  -> deux noms
-//   avecDeuxJoueurs = 0 : Joueur VS IA      -> un seul nom
-// ================================================================
+//   avecDeuxJoueurs = 1 : Joueur VS Joueur  dc deux noms
+//   avecDeuxJoueurs = 0 : Joueur VS IA      dc un seul nom
+// a revoir !!!
 void saisirNoms(Jeu* jeu, int avecDeuxJoueurs)
 {
     char buf[30];
@@ -183,7 +185,8 @@ void saisirNoms(Jeu* jeu, int avecDeuxJoueurs)
 
     // Nom du joueur 1 (toujours)
     printf("%62s", "");
-    printf(WHT); printf(BG_RED);
+    printf(WHT);
+    printf(BG_RED);
     printf(" Nom du Joueur 1 (rouge) : ");
     printf(COLOR_RESET);
     printf(" ");
@@ -192,14 +195,15 @@ void saisirNoms(Jeu* jeu, int avecDeuxJoueurs)
         buf[strcspn(buf, "\n")] = '\0'; // Supprimer le '\n'
         if(strlen(buf) > 0)
             strncpy(jeu->J[0].Nom, buf, sizeof(jeu->J[0].Nom) - 1);
-        // Si vide -> on garde "Joueur 1" mis par initJoueur
+        // Si vide , on garde "Joueur 1" mis par initJoueur
     }
 
-    if(avecDeuxJoueurs)
+    if(avecDeuxJoueurs == 1)
     {
         // Nom du joueur 2
         printf("%62s", "");
-        printf(WHT); printf(BG_BLU);
+        printf(WHT);
+        printf(BG_BLU);
         printf(" Nom du Joueur 2 (bleu)  : ");
         printf(COLOR_RESET);
         printf(" ");
@@ -214,7 +218,7 @@ void saisirNoms(Jeu* jeu, int avecDeuxJoueurs)
 
     printf(GRN);
     printf("%62s========================================\n", "");
-    if(avecDeuxJoueurs)
+    if(avecDeuxJoueurs == 1)
         printf("%62s  %s (rouge) VS %s (bleu)\n", "",
                jeu->J[0].Nom, jeu->J[1].Nom);
     else
@@ -434,14 +438,18 @@ void SupprimerPionPlateau(Plateau* P, int pos)
 
 void afficherPlateau(const Plateau* P)
 {
+    int i , j , k , pos;
+    char c;
+
     int posLigne[24] = {0,0,0, 5,10,10,10, 5,
                         2,2,2,  5, 8, 8, 8, 5,
                         4,4,4,  5, 6, 6, 6, 5};
+
     int posCol[24]   = {0,12,24, 24,24,12,0, 0,
                         4,12,20, 20,20,12,4, 4,
                         8,12,16, 16,16,12,8, 8};
-    char grille[11][30];
-    int i;
+    char grille[11][30]; // 11 nbr de lignes du plateua
+
 
     for(i = 0; i < 11; i++)
         strcpy(grille[i], P->Pl[i]);
@@ -451,11 +459,11 @@ void afficherPlateau(const Plateau* P)
     for(i = 0; i < 11; i++)
     {
         printf("%70s", "");
-        for(int j = 0; j < (int)strlen(grille[i]); j++)
+        for(j = 0; j < (int)strlen(grille[i]); j++)
         {
-            char c = grille[i][j];
-            int pos = -1;
-            for(int k = 0; k < Nbr_Cases; k++)
+            c = grille[i][j];
+            pos = -1;
+            for(k = 0; k < Nbr_Cases; k++)
             {
                 if(posLigne[k] == i && posCol[k] == j)
                 {
@@ -467,13 +475,15 @@ void afficherPlateau(const Plateau* P)
             {
                 if(P->Case[pos] == J1)
                 {
-                    printf(WHT); printf(BG_RED);
+                    printf(WHT);
+                    printf(BG_RED);
                     printf("%c", positionVersLettre(pos));
                     printf(COLOR_RESET);
                 }
                 else if(P->Case[pos] == J2)
                 {
-                    printf(WHT); printf(BG_BLU);
+                    printf(WHT);
+                    printf(BG_BLU);
                     printf("%c", positionVersLettre(pos));
                     printf(COLOR_RESET);
                 }
@@ -497,11 +507,16 @@ void afficherEtat(const Jeu* jeu)
 {
     afficherPlateau(&jeu->P);
 
+    // Joueur 1
     printf("%65s", "");
-    printf(WHT); printf(BG_RED);
+    printf(WHT);
+    printf(BG_RED);
     printf("[%s : %d pions]", jeu->J[0].Nom, jeu->J[0].nbrPionPlateau);
     printf(COLOR_RESET);
-    printf(WHT); printf(BG_BLU);
+
+    // Joueur 2
+    printf(WHT);
+    printf(BG_BLU);
     printf("[%s : %d pions]", jeu->J[1].Nom, jeu->J[1].nbrPionPlateau);
     printf(COLOR_RESET);
     printf("\n\n");
@@ -523,49 +538,73 @@ int verifieMoulin(const Plateau* p, int pos, etatCase e)
 int mouvementValide(const Plateau* p, int depart, int arrivee, etatCase e)
 {
     int i, l;
+
     l = p->Nbr_Adjs[depart];
-    if(p->Case[arrivee] != vide) return 0;
+
+    if(p->Case[arrivee] != vide)
+        return 0;
+
     if(p->Case[depart] == e)
         for(i = 0; i < l; i++)
-            if(p->Adjs[depart][i] == arrivee) return 1;
+            if(p->Adjs[depart][i] == arrivee)
+                return 1;
+
     return 0;
 }
+
 
 int Volvalide(const Plateau* p, int depart, int arrivee, etatCase e)
 {
     if(p->Case[arrivee] == vide && p->Case[depart] == e)
         return 1;
+
     return 0;
 }
 
 int estCapturable(const Plateau* p, int pos, etatCase e)
 {
     int i, cnt = 0;
-    if(verifieMoulin(p, pos, e) == 0) return 1;
+
+    if(verifieMoulin(p, pos, e) == 0)
+        return 1;
+
     for(i = 0; i < Nbr_Cases; i++)
         if(p->Case[i] == e && verifieMoulin(p, i, e) == 0)
             cnt++;
-    if(cnt == 0) return 1;
+    // si tous les pions adverses forme un moulin
+
+    if(cnt == 0)
+        return 1;
+
     return 0;
 }
 
 int joueurBloque(const Plateau* p, etatCase joueur, PhaseJeu phase)
 {
-    int i, j;
-    if(phase == Placement) return 0;
+    int i, j , adj;
+
+    // Placement
+    if(phase == Placement)
+        return 0;
+
+    // vol
     if(phase == Vol)
     {
         for(i = 0; i < Nbr_Cases; i++)
-            if(p->Case[i] == vide) return 0;
+            if(p->Case[i] == vide)
+                return 0;
+
         return 1;
     }
+
+    // Deplacement
     for(i = 0; i < Nbr_Cases; i++)
     {
         if(p->Case[i] == joueur)
         {
             for(j = 0; j < p->Nbr_Adjs[i]; j++)
             {
-                int adj = p->Adjs[i][j];
+                adj = p->Adjs[i][j];
                 if(adj != -1 && p->Case[adj] == vide)
                     return 0;
             }
@@ -578,8 +617,10 @@ PhaseJeu phaseJoueur(const Jeu* jeu, int idxJoueur)
 {
     if(jeu->J[0].nbrPionPlacer < 9 || jeu->J[1].nbrPionPlacer < 9)
         return Placement;
+
     if(jeu->J[idxJoueur].nbrPionPlateau == 3)
         return Vol;
+
     return Deplacement;
 }
 
@@ -589,6 +630,7 @@ void initJoueur(Joueur* j, int id, typeJoueur type)
     j->nbrPionPlacer = 0;
     j->nbrPionPlateau = 0;
     j->type = type;
+
     // Noms par defaut (ecrases par saisirNoms si besoin)
     if(id == 1)
         strcpy(j->Nom, "Joueur 1");
@@ -612,7 +654,7 @@ void initJeu(Jeu* jeu, typeJoueur t1, typeJoueur t2)
     initJoueur(&jeu->J[0], 1, t1);
     initJoueur(&jeu->J[1], 2, t2);
     jeu->phase = Placement;
-    jeu->JoueurCourant = 0;
+    jeu->JoueurCourant = 0; // ou jeu->JoueurCourant = 1; comme tu veux
     jeu->FinJeu = 0;
     jeu->Gagnant = -1;
 }
@@ -620,6 +662,7 @@ void initJeu(Jeu* jeu, typeJoueur t1, typeJoueur t2)
 void changerJoueurJeu(Jeu* jeu)
 {
     jeu->JoueurCourant = 1 - jeu->JoueurCourant;
+    // 1-0=1 ou 1-1=0.
 }
 
 void mettreAJourPhase(Jeu* jeu)
@@ -633,15 +676,18 @@ int verifierGagnant(const Jeu* jeu)
 {
     if(jeu->phase != Placement)
     {
-        if(jeu->J[0].nbrPionPlateau < 3) return 2;
-        if(jeu->J[1].nbrPionPlateau < 3) return 1;
+        if(jeu->J[0].nbrPionPlateau < 3)
+            return 2;
+
+        if(jeu->J[1].nbrPionPlateau < 3)
+            return 1;
     }
     return -1;
 }
 
 void gererCapture(Jeu* jeu)
 {
-    int pos;
+    int pos , i;
     char lettre;
     int adversaire = 1 - jeu->JoueurCourant;
     etatCase pionAdverse = (adversaire == 0) ? J1 : J2;
@@ -653,7 +699,8 @@ void gererCapture(Jeu* jeu)
 
     printf("%62s", "");
     printf("Pions adverses capturables: ");
-    for(int i = 0; i < Nbr_Cases; i++)
+
+    for(i = 0; i < Nbr_Cases; i++)
         if(jeu->P.Case[i] == pionAdverse && estCapturable(&jeu->P, i, pionAdverse))
             printf("%c ", positionVersLettre(i));
     printf("\n");
@@ -663,6 +710,7 @@ void gererCapture(Jeu* jeu)
         printf("Choisir un pion a capturer (lettre): ");
         scanf(" %c", &lettre);
         while(getchar() != '\n');
+
         pos = lettreVersPosition(lettre);
         if(pos == -1 || jeu->P.Case[pos] != pionAdverse || !estCapturable(&jeu->P, pos, pionAdverse))
         {
@@ -697,6 +745,7 @@ void tourHumainPlacement(Jeu* jeu)
         printf("Choisir une position (A-X): ");
         scanf(" %c", &lettre);
         while(getchar() != '\n');
+
         pos = lettreVersPosition(lettre);
         if(pos == -1 || !PlateauEstVide(&jeu->P, pos))
         {
@@ -720,7 +769,7 @@ void tourHumainPlacement(Jeu* jeu)
 
 void tourHumainDeplacement(Jeu* jeu)
 {
-    int posDepart, posArrivee;
+    int posDepart, posArrivee , adj , i , valide;
     char lettreDepart, lettreArrivee;
     etatCase pionCourant = (jeu->JoueurCourant == 0) ? J1 : J2;
 
@@ -744,6 +793,7 @@ void tourHumainDeplacement(Jeu* jeu)
         printf("Choisir un de vos pions a deplacer (A-X): ");
         scanf(" %c", &lettreDepart);
         while(getchar() != '\n');
+
         posDepart = lettreVersPosition(lettreDepart);
         if(posDepart == -1 || jeu->P.Case[posDepart] != pionCourant)
         {
@@ -758,9 +808,10 @@ void tourHumainDeplacement(Jeu* jeu)
     {
         printf("%70s", "");
         printf("Destinations possibles: ");
-        for(int i = 0; i < jeu->P.Nbr_Adjs[posDepart]; i++)
+        for(i = 0; i < jeu->P.Nbr_Adjs[posDepart]; i++)
         {
-            int adj = jeu->P.Adjs[posDepart][i];
+            adj = jeu->P.Adjs[posDepart][i];
+
             if(adj != -1 && jeu->P.Case[adj] == vide)
                 printf("%c ", positionVersLettre(adj));
         }
@@ -779,8 +830,9 @@ void tourHumainDeplacement(Jeu* jeu)
         printf("Choisir la destination (A-X): ");
         scanf(" %c", &lettreArrivee);
         while(getchar() != '\n');
+
         posArrivee = lettreVersPosition(lettreArrivee);
-        int valide = (jeu->phase == Vol)
+        valide = (jeu->phase == Vol)
             ? Volvalide(&jeu->P, posDepart, posArrivee, pionCourant)
             : mouvementValide(&jeu->P, posDepart, posArrivee, pionCourant);
         if(!valide)
@@ -804,9 +856,10 @@ void tourHumainDeplacement(Jeu* jeu)
     }
 }
 
-static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,
-                              char nomJ1[30], char nomJ2[30])
+static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,char nomJ1[30], char nomJ2[30])
 {
+    int choix;
+
     system("cls");
     afficherEtat(jeu);
 
@@ -818,17 +871,14 @@ static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,
     printf(COLOR_RESET);
     system("pause");
 
-    int choix;
-    system("cls");
     printf(GRN);
     printf("%62s========================================\n", "");
     printf("%62s        Que voulez-vous faire ?\n", "");
     printf("%62s========================================\n", "");
     printf(COLOR_RESET);
     printf(YEL);
-    printf("%62s| 1 - Rejouer la meme configuration    |\n", "");
-    printf("%62s| 2 - Retourner au menu principal      |\n", "");
-    printf("%62s| 3 - Quitter le jeu                   |\n", "");
+    printf("%62s| 1 - Retourner au menu principal      |\n", "");
+    printf("%62s| 2 - Quitter le jeu                   |\n", "");
     printf(COLOR_RESET);
     printf(GRN);
     printf("%62s========================================\n", "");
@@ -838,19 +888,14 @@ static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,
         printf("%62sVotre choix : ", "");
         scanf("%d", &choix);
         while(getchar() != '\n');
-    } while(choix < 1 || choix > 3);
+
+    } while(choix < 1 || choix > 2);
 
     system("cls");
+
     if(choix == 1)
-    {
-        // Rejouer : reinitialiser le jeu en conservant les noms saisis
-        initJeu(jeu, t1, t2);
-        strncpy(jeu->J[0].Nom, nomJ1, 29);
-        strncpy(jeu->J[1].Nom, nomJ2, 29);
-        return 1;
-    }
-    else if(choix == 2)
         return 0;
+
     else
     {
         printf(RED);
@@ -871,6 +916,7 @@ static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,
 
 void jouerPartie(Jeu* jeu)
 {
+    int adversaire , posDepart, posArrivee , i , pos , c , idxPerdant , gagnant,tentatives;
     typeJoueur t1 = jeu->J[0].type;
     typeJoueur t2 = jeu->J[1].type;
 
@@ -903,6 +949,7 @@ void jouerPartie(Jeu* jeu)
                     printf("%62s%s est bloque, aucun mouvement possible !\n",
                            "", jeu->J[jeu->JoueurCourant].Nom);
                     printf(COLOR_RESET);
+                    system("pause");
 
                     if(!afficherFinPartie(jeu, t1, t2, nomJ1, nomJ2))
                         return;
@@ -942,7 +989,7 @@ void jouerPartie(Jeu* jeu)
                     printf("IA Difficile place un pion en %c\n", positionVersLettre(coup.arrivee));
                     if(coup.capture != -1)
                     {
-                        int adversaire = 1 - jeu->JoueurCourant;
+                        adversaire = 1 - jeu->JoueurCourant;
                         SupprimerPionPlateau(&jeu->P, coup.capture);
                         jeu->J[adversaire].nbrPionPlateau--;
                         printf("%70s", "");
@@ -953,9 +1000,13 @@ void jouerPartie(Jeu* jeu)
                 else // IA_simple
                 {
                     etatCase pionCourant = (jeu->JoueurCourant == 0) ? J1 : J2;
-                    int pos;
-                    do { pos = rand() % Nbr_Cases; }
-                    while(!PlateauEstVide(&jeu->P, pos));
+                    pos;
+
+                    do {
+                            pos = rand() % Nbr_Cases;
+
+                    }while(!PlateauEstVide(&jeu->P, pos));
+
                     PlacerPionPlateau(&jeu->P, pos, pionCourant);
                     jeu->J[jeu->JoueurCourant].nbrPionPlacer++;
                     jeu->J[jeu->JoueurCourant].nbrPionPlateau++;
@@ -964,9 +1015,9 @@ void jouerPartie(Jeu* jeu)
                     system("pause");
                     if(verifieMoulin(&jeu->P, pos, pionCourant))
                     {
-                        int adversaire = 1 - jeu->JoueurCourant;
+                        adversaire = 1 - jeu->JoueurCourant;
                         etatCase pionAdverse = (adversaire == 0) ? J1 : J2;
-                        for(int i = 0; i < Nbr_Cases; i++)
+                        for(i = 0; i < Nbr_Cases; i++)
                         {
                             if(jeu->P.Case[i] == pionAdverse && estCapturable(&jeu->P, i, pionAdverse))
                             {
@@ -1001,7 +1052,7 @@ void jouerPartie(Jeu* jeu)
                            positionVersLettre(coup.depart), positionVersLettre(coup.arrivee));
                     if(coup.capture != -1)
                     {
-                        int adversaire = 1 - jeu->JoueurCourant;
+                        adversaire = 1 - jeu->JoueurCourant;
                         SupprimerPionPlateau(&jeu->P, coup.capture);
                         jeu->J[adversaire].nbrPionPlateau--;
                         printf("%70s", "");
@@ -1012,21 +1063,26 @@ void jouerPartie(Jeu* jeu)
                 else // IA_simple
                 {
                     etatCase pionCourant = (jeu->JoueurCourant == 0) ? J1 : J2;
-                    int posDepart, posArrivee = 0;
+                    posDepart, posArrivee = 0;
                     if(jeu->phase == Vol)
                     {
-                        do { posDepart = rand() % Nbr_Cases; }
-                        while(jeu->P.Case[posDepart] != pionCourant);
-                        do { posArrivee = rand() % Nbr_Cases; }
-                        while(!Volvalide(&jeu->P, posDepart, posArrivee, pionCourant));
+                        do {
+                                posDepart = rand() % Nbr_Cases;
+
+                        }while(jeu->P.Case[posDepart] != pionCourant);
+
+                        do {
+                                posArrivee = rand() % Nbr_Cases;
+
+                        }while(!Volvalide(&jeu->P, posDepart, posArrivee, pionCourant));
                     }
                     else
                     {
-                        int tentatives = 0;
+                        c = 0;
                         do {
                             posDepart = rand() % Nbr_Cases;
                             if(jeu->P.Case[posDepart] == pionCourant)
-                                for(int i = 0; i < jeu->P.Nbr_Adjs[posDepart]; i++)
+                                for(i = 0; i < jeu->P.Nbr_Adjs[posDepart]; i++)
                                 {
                                     posArrivee = jeu->P.Adjs[posDepart][i];
                                     if(posArrivee != -1 && mouvementValide(&jeu->P, posDepart, posArrivee, pionCourant))
@@ -1043,9 +1099,9 @@ void jouerPartie(Jeu* jeu)
                     system("pause");
                     if(verifieMoulin(&jeu->P, posArrivee, pionCourant))
                     {
-                        int adversaire = 1 - jeu->JoueurCourant;
+                        adversaire = 1 - jeu->JoueurCourant;
                         etatCase pionAdverse = (adversaire == 0) ? J1 : J2;
-                        for(int i = 0; i < Nbr_Cases; i++)
+                        for(i = 0; i < Nbr_Cases; i++)
                         {
                             if(jeu->P.Case[i] == pionAdverse && estCapturable(&jeu->P, i, pionAdverse))
                             {
@@ -1060,16 +1116,16 @@ void jouerPartie(Jeu* jeu)
                 }
             }
 
-            // Mise a jour phase + verification gagnant
+            // Mise a jour phase et verification du gagnant
             mettreAJourPhase(jeu);
 
-            int gagnant = verifierGagnant(jeu);
+            gagnant = verifierGagnant(jeu);
             if(gagnant != -1)
             {
                 jeu->FinJeu  = 1;
                 jeu->Gagnant = gagnant;
 
-                int idxPerdant = (gagnant == 1) ? 1 : 0;
+                idxPerdant = (gagnant == 1) ? 1 : 0;
                 system("cls");
                 afficherEtat(jeu);
                 printf(RED);
@@ -1089,9 +1145,9 @@ void jouerPartie(Jeu* jeu)
     }
 }
 
-// ============================================================
+
 // IA DIFFICILE - ALGORITHME MINIMAX AVEC ELAGAGE ALPHA-BETA
-// ============================================================
+
 
 void copierJeu(const Jeu* src, Jeu* dst)
 {
@@ -1100,68 +1156,86 @@ void copierJeu(const Jeu* src, Jeu* dst)
 
 int evaluerPlateau(const Jeu* jeu, int joueurIA)
 {
-    int score = 0;
+    int score = 0 , i , adj ,j;
     int adversaire = 1 - joueurIA;
     etatCase pionIA  = (joueurIA   == 0) ? J1 : J2;
     etatCase pionAdv = (adversaire == 0) ? J1 : J2;
 
     int gagnant = verifierGagnant(jeu);
-    if(gagnant == joueurIA + 1)   return  200;
-    if(gagnant == adversaire + 1) return -200;
+
+    if(gagnant == joueurIA + 1)
+        return  200;
+
+    if(gagnant == adversaire + 1)
+        return -200;
 
     score += jeu->J[joueurIA].nbrPionPlateau   * 10;
     score -= jeu->J[adversaire].nbrPionPlateau * 10;
 
-    for(int i = 0; i < Nbr_Cases; i++)
+    for(i = 0; i < Nbr_Cases; i++)
     {
-        if(jeu->P.Case[i] == pionIA  && verifieMoulin(&jeu->P, i, pionIA))  score += 5;
-        if(jeu->P.Case[i] == pionAdv && verifieMoulin(&jeu->P, i, pionAdv)) score -= 5;
+        if(jeu->P.Case[i] == pionIA  && verifieMoulin(&jeu->P, i, pionIA))
+            score += 5;
+
+        if(jeu->P.Case[i] == pionAdv && verifieMoulin(&jeu->P, i, pionAdv))
+            score -= 5;
     }
 
-    for(int i = 0; i < Nbr_Cases; i++)
+    for(i = 0; i < Nbr_Cases; i++)
     {
         if(jeu->P.Case[i] == pionIA || jeu->P.Case[i] == pionAdv)
         {
             int vides = 0;
-            for(int j = 0; j < jeu->P.Nbr_Adjs[i]; j++)
+            for(j = 0; j < jeu->P.Nbr_Adjs[i]; j++)
             {
-                int adj = jeu->P.Adjs[i][j];
+                adj = jeu->P.Adjs[i][j];
                 if(adj != -1 && jeu->P.Case[adj] == vide) vides++;
             }
             if(vides >= 2)
             {
-                if(jeu->P.Case[i] == pionIA)  score += 2;
-                else                           score -= 2;
+                if(jeu->P.Case[i] == pionIA)
+                    score += 2;
+
+                else
+                    score -= 2;
             }
         }
     }
 
     PhaseJeu phaseAdv = phaseJoueur(jeu, adversaire);
     PhaseJeu phaseIAj = phaseJoueur(jeu, joueurIA);
-    if(joueurBloque(&jeu->P, pionAdv, phaseAdv)) score += 15;
-    if(joueurBloque(&jeu->P, pionIA,  phaseIAj)) score -= 15;
+
+    if(joueurBloque(&jeu->P, pionAdv, phaseAdv))
+        score += 15;
+
+    if(joueurBloque(&jeu->P, pionIA,  phaseIAj))
+        score -= 15;
 
     return score;
 }
 
 int genererCoups(const Jeu* jeu, Coup coups[], int maxCoups)
 {
-    int nbCoups = 0;
+    int nbCoups = 0 , i , j , trouve , dep , idx , nbDest , arr , valide;
     etatCase pionCourant = (jeu->JoueurCourant == 0) ? J1 : J2;
     etatCase pionAdverse = (jeu->JoueurCourant == 0) ? J2 : J1;
     (void)pionAdverse;
 
     if(jeu->phase == Placement)
     {
-        for(int i = 0; i < Nbr_Cases && nbCoups < maxCoups; i++)
+        for(i = 0; i < Nbr_Cases && nbCoups < maxCoups; i++)
         {
-            if(!PlateauEstVide(&jeu->P, i)) continue;
-            Jeu copie; copierJeu(jeu, &copie);
+            if(!PlateauEstVide(&jeu->P, i))
+                continue;
+
+            Jeu copie;
+            copierJeu(jeu, &copie);
             PlacerPionPlateau(&copie.P, i, pionCourant);
+
             if(verifieMoulin(&copie.P, i, pionCourant))
             {
-                int trouve = 0;
-                for(int j = 0; j < Nbr_Cases && nbCoups < maxCoups; j++)
+                trouve = 0;
+                for(j = 0; j < Nbr_Cases && nbCoups < maxCoups; j++)
                 {
                     if(copie.P.Case[j] == pionAdverse && estCapturable(&copie.P, j, pionAdverse))
                     {
@@ -1185,25 +1259,34 @@ int genererCoups(const Jeu* jeu, Coup coups[], int maxCoups)
     else
     {
         PhaseJeu phaseReelle = phaseJoueur(jeu, jeu->JoueurCourant);
-        for(int dep = 0; dep < Nbr_Cases && nbCoups < maxCoups; dep++)
+        for(dep = 0; dep < Nbr_Cases && nbCoups < maxCoups; dep++)
         {
-            if(jeu->P.Case[dep] != pionCourant) continue;
-            int nbDest = (phaseReelle == Vol) ? Nbr_Cases : jeu->P.Nbr_Adjs[dep];
-            for(int idx = 0; idx < nbDest && nbCoups < maxCoups; idx++)
+            if(jeu->P.Case[dep] != pionCourant)
+                continue;
+
+            nbDest = (phaseReelle == Vol) ? Nbr_Cases : jeu->P.Nbr_Adjs[dep];
+            for(idx = 0; idx < nbDest && nbCoups < maxCoups; idx++)
             {
-                int arr = (phaseReelle == Vol) ? idx : jeu->P.Adjs[dep][idx];
-                if(arr == -1) continue;
-                int valide = (phaseReelle == Vol)
+                arr = (phaseReelle == Vol) ? idx : jeu->P.Adjs[dep][idx];
+                if(arr == -1)
+                    continue;
+
+                valide = (phaseReelle == Vol)
                     ? Volvalide(&jeu->P, dep, arr, pionCourant)
                     : mouvementValide(&jeu->P, dep, arr, pionCourant);
-                if(!valide) continue;
-                Jeu copie; copierJeu(jeu, &copie);
+
+                if(!valide)
+                    continue;
+
+                Jeu copie;
+                copierJeu(jeu, &copie);
                 SupprimerPionPlateau(&copie.P, dep);
                 PlacerPionPlateau(&copie.P, arr, pionCourant);
+
                 if(verifieMoulin(&copie.P, arr, pionCourant))
                 {
-                    int trouve = 0;
-                    for(int j = 0; j < Nbr_Cases && nbCoups < maxCoups; j++)
+                    trouve = 0;
+                    for(j = 0; j < Nbr_Cases && nbCoups < maxCoups; j++)
                     {
                         if(copie.P.Case[j] == pionAdverse && estCapturable(&copie.P, j, pionAdverse))
                         {
@@ -1252,41 +1335,59 @@ static void appliquerCoup(Jeu* jeu, const Coup* c)
     changerJoueurJeu(jeu);
     jeu->phase = phaseJoueur(jeu, jeu->JoueurCourant);
     int gagnant = verifierGagnant(jeu);
-    if(gagnant != -1) { jeu->FinJeu = 1; jeu->Gagnant = gagnant; }
+
+    if(gagnant != -1)
+    {
+        jeu->FinJeu = 1;
+        jeu->Gagnant = gagnant;
+    }
 }
 
 int alphaBeta(Jeu* jeu, int profondeur, int alpha, int beta, int estMaximisant, int joueurIA)
 {
+    int i;
     if(profondeur == 0 || jeu->FinJeu == 1)
         return evaluerPlateau(jeu, joueurIA);
+
     Coup coups[200];
     int nbCoups = genererCoups(jeu, coups, 200);
-    if(nbCoups == 0) return evaluerPlateau(jeu, joueurIA);
+
+    if(nbCoups == 0)
+        return evaluerPlateau(jeu, joueurIA);
+
     if(estMaximisant)
     {
         int maxEval = -1000;
-        for(int i = 0; i < nbCoups; i++)
+        for(i = 0; i < nbCoups; i++)
         {
             Jeu copie; copierJeu(jeu, &copie);
             appliquerCoup(&copie, &coups[i]);
             int eval = alphaBeta(&copie, profondeur-1, alpha, beta, 0, joueurIA);
-            if(eval > maxEval) maxEval = eval;
-            if(eval > alpha)   alpha   = eval;
-            if(beta <= alpha)  break;
+
+            if(eval > maxEval)
+                maxEval = eval;
+            if(eval > alpha)
+                alpha   = eval;
+            if(beta <= alpha)
+                break;
         }
         return maxEval;
     }
     else
     {
         int minEval = 1000;
-        for(int i = 0; i < nbCoups; i++)
+        for(i = 0; i < nbCoups; i++)
         {
             Jeu copie; copierJeu(jeu, &copie);
             appliquerCoup(&copie, &coups[i]);
             int eval = alphaBeta(&copie, profondeur-1, alpha, beta, 1, joueurIA);
-            if(eval < minEval) minEval = eval;
-            if(eval < beta)    beta    = eval;
-            if(beta <= alpha)  break;
+
+            if(eval < minEval)
+                minEval = eval;
+            if(eval < beta)
+                beta    = eval;
+            if(beta <= alpha)
+                break;
         }
         return minEval;
     }
@@ -1295,17 +1396,27 @@ int alphaBeta(Jeu* jeu, int profondeur, int alpha, int beta, int estMaximisant, 
 Coup meilleurCoupIA(Jeu* jeu)
 {
     Coup coups[200];
+    int i;
     int nbCoups = genererCoups(jeu, coups, 200);
     Coup coupInvalide = {-1, -1, -1};
-    if(nbCoups == 0) return coupInvalide;
+
+    if(nbCoups == 0)
+        return coupInvalide;
+
     int meilleurScore = -1001;
     Coup meilleurCoup = coups[0];
-    for(int i = 0; i < nbCoups; i++)
+
+    for(i = 0; i < nbCoups; i++)
     {
         Jeu copie; copierJeu(jeu, &copie);
         appliquerCoup(&copie, &coups[i]);
         int score = alphaBeta(&copie, 3, -1000, 1000, 0, jeu->JoueurCourant);
-        if(score > meilleurScore) { meilleurScore = score; meilleurCoup = coups[i]; }
+
+        if(score > meilleurScore)
+        {
+            meilleurScore = score;
+            meilleurCoup = coups[i];
+        }
     }
     return meilleurCoup;
 }
