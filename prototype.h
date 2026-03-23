@@ -9,7 +9,9 @@
 #define MAG "\e[0;35m"
 #define CYN "\e[0;36m"
 #define WHT "\e[0;37m"
+
 #define COLOR_RESET "\e[0m"
+
 #define BG_RED   "\e[41m"
 #define BG_GRN   "\e[42m"
 #define BG_YEL   "\e[43m"
@@ -17,7 +19,6 @@
 #define BG_MAG   "\e[45m"
 #define BG_CYN   "\e[46m"
 #define BG_WHT   "\e[47m"
-
 #define Nbr_Cases     24
 #define Nbr_Moulin    16
 #define Max_Adjascent  4
@@ -25,7 +26,6 @@
 typedef enum
 {
     vide, J1, J2
-
 } etatCase;
 
 typedef struct
@@ -40,7 +40,6 @@ typedef struct
 typedef enum
 {
      humain, IA_simple, IA_difficile
-
 } typeJoueur;
 
 typedef struct
@@ -55,7 +54,6 @@ typedef struct
 typedef enum
 {
      Placement, Deplacement, Vol
-
 } PhaseJeu;
 
 typedef struct
@@ -67,7 +65,6 @@ typedef struct
     int      FinJeu;
     int      Gagnant;
 } Jeu;
-
 
 typedef struct
 {
@@ -94,7 +91,6 @@ void afficherEtat(const Jeu *);
 // Joueur
 void initJoueur(Joueur *, int, typeJoueur);
 int  nbrTotalePions(const Joueur *);
-
 // Jeu
 void     initJeu(Jeu *, typeJoueur t1, typeJoueur t2);
 void     changerJoueurJeu(Jeu *);
