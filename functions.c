@@ -2,10 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 #include "prototype.h"
 
 /*
-Plateau a utiliser dans ce jeu (positions 0-23 = lettres A-X)
+Plateau a utiliser dans ce jeu (positions 0-23 = lettres A-...-X)
 
 A-----------B-----------C
 |           |           |
@@ -27,7 +28,7 @@ Carre interieur : Q(16) R(17) S(18) T(19) U(20) V(21) W(22) X(23)
 //NOM DU JEU
 void Nom_jeu(void)
 {
-    printf(GRN);
+    printf(CYN);
     printf("%120s","      _ ______ _    _   _____  ______   __  __  ____  _    _ _      _____ _   _ \n");
     printf("%120s","     | |  ____| |  | | |  __ \\|  ____| |  \\/  |/ __ \\| |  | | |    |_   _| \\ | |\n");
     printf("%120s","     | | |__  | |  | | | |  | | |__    | \\  / | |  | | |  | | |      | | |  \\| |\n");
@@ -41,25 +42,29 @@ void Nom_jeu(void)
 void menu()
 {
     printf(YEL);
-    printf("%100s","+------------------------------+\n");
-    printf("%100s","|     1 - Joueur VS Joueur     |\n");
-    printf("%100s","+------------------------------+\n");
+    printf("%103s","+------------------------------+\n");
+    printf("%103s","|     1 - Joueur VS Joueur     |\n");
+    printf("%103s","+------------------------------+\n");
     printf(COLOR_RESET);
+
     printf(BLU);
-    printf("%100s","|   2 - Joueur VS IA SIMPLE    |\n");
-    printf("%100s","+------------------------------+\n");
+    printf("%103s","|   2 - Joueur VS IA SIMPLE    |\n");
+    printf("%103s","+------------------------------+\n");
     printf(COLOR_RESET);
-    printf(CYN);
-    printf("%100s","| 3 - Joueur VS IA Difficile   |\n");
-    printf("%100s","+------------------------------+\n");
+
+    printf(GRN);
+    printf("%103s","| 3 - Joueur VS IA Difficile   |\n");
+    printf("%103s","+------------------------------+\n");
     printf(COLOR_RESET);
+
     printf(MAG);
-    printf("%100s","|     4 - Regles du Jeu        |\n");
-    printf("%100s","+------------------------------+\n");
+    printf("%103s","|     4 - Regles du Jeu        |\n");
+    printf("%103s","+------------------------------+\n");
     printf(COLOR_RESET);
+
     printf(RED);
-    printf("%100s","|     5 - Quitter              |\n");
-    printf("%100s","+------------------------------+\n");
+    printf("%103s","|     5 - Quitter              |\n");
+    printf("%103s","+------------------------------+\n");
     printf(COLOR_RESET);
 }
 
@@ -70,17 +75,20 @@ void regles()
         printf("%110s","  MATERIEL                                      \n");
         printf("%110s","------------------------------------------------\n");
         printf(COLOR_RESET);
+
         printf(WHT);
         printf("%110s","  * Plateau : 3 carres concentriques relies     \n");
         printf("%110s","    par des lignes = 24 intersections           \n");
         printf("%110s","  * Chaque joueur dispose de 9 pions            \n");
         printf("%110s","  * Les joueurs jouent chacun leur tour         \n");
         printf(COLOR_RESET);
+
         printf(YEL);
         printf("%110s","------------------------------------------------\n");
         printf("%110s","  PHASE 1 : PLACEMENT DES PIONS                 \n");
         printf("%110s","------------------------------------------------\n");
         printf(COLOR_RESET);
+
         printf(WHT);
         printf("%110s","  * Chaque joueur place 1 pion par tour         \n");
         printf("%110s","    sur une intersection vide                   \n");
@@ -90,11 +98,13 @@ void regles()
         printf("%110s","    etre retire SAUF si tous les pions adverses \n");
         printf("%110s","    sont dans des moulins                       \n");
         printf(COLOR_RESET);
+
         printf(YEL);
         printf("%110s","------------------------------------------------\n");
         printf("%110s","  PHASE 2 : DEPLACEMENT DES PIONS               \n");
         printf("%110s","------------------------------------------------\n");
         printf(COLOR_RESET);
+
         printf(WHT);
         printf("%110s","  * Une fois les 18 pions places (9 par joueur) \n");
         printf("%110s","    on passe au deplacement                     \n");
@@ -105,11 +115,13 @@ void regles()
         printf("%110s","  * Si tu ne peux plus bouger aucun pion        \n");
         printf("%110s","    tu PERDS la partie                          \n");
         printf(COLOR_RESET);
+
         printf(YEL);
         printf("%110s","------------------------------------------------\n");
         printf("%110s","  PHASE 3 : VOL (3 PIONS RESTANTS)              \n");
         printf("%110s","------------------------------------------------\n");
         printf(COLOR_RESET);
+
         printf(WHT);
         printf("%110s","  * Quand il ne te reste que 3 pions, tu peux   \n");
         printf("%110s","    deplacer ton pion vers N'IMPORTE quelle     \n");
@@ -118,11 +130,13 @@ void regles()
         printf("%110s","    chance de former des moulins                \n");
         printf("%110s","  * Si tu descends a 2 pions tu PERDS           \n");
         printf(COLOR_RESET);
+
         printf(YEL);
         printf("%110s","------------------------------------------------\n");
         printf("%110s","  QU'EST-CE QU'UN MOULIN ?                      \n");
         printf("%110s","------------------------------------------------\n");
         printf(COLOR_RESET);
+
         printf(WHT);
         printf("%110s","  * Un MOULIN = 3 pions du meme joueur alignes  \n");
         printf("%110s","    sur une meme ligne du plateau               \n");
@@ -131,11 +145,13 @@ void regles()
         printf("%110s","    puis le remettre au tour suivant pour       \n");
         printf("%110s","    capturer un autre pion adverse (legal !)    \n");
         printf(COLOR_RESET);
+
         printf(YEL);
         printf("%110s","------------------------------------------------\n");
         printf("%110s","  CONDITIONS DE DEFAITE                         \n");
         printf("%110s","------------------------------------------------\n");
         printf(COLOR_RESET);
+
         printf(RED);
         printf("%110s","  * Tu perds si tu n'as plus que 2 pions        \n");
         printf("%110s","    (impossible de former un moulin)            \n");
@@ -144,6 +160,7 @@ void regles()
         printf("%110s","  * Tu perds si tu n'as que 2 pions restants    \n");
         printf("%110s","    meme en phase de vol                        \n");
         printf(COLOR_RESET);
+
         printf(GRN);
         printf("%114s","========================================================\n");
         printf("%114s","   Appuie sur une touche pour revenir au menu...        \n");
@@ -161,47 +178,53 @@ int choix_mode()
 
         printf("\nChoisir un nombre de la liste des choix: ");
         scanf("%d", &choix);
-        while(getchar() != '\n'); // vide le tampon d’entrée après scanf
+        while(getchar() != '\n'); // vide le tampon d’entree apres scanf
 
     } while (choix < 1 || choix > 5);
+
     system("cls");
     return choix;
 }
 
 
-// saisirNoms : demande les noms des joueurs selon le mode de jeu
+// saisir des noms : demande les noms des joueurs selon le mode de jeu
 //   avecDeuxJoueurs = 1 : Joueur VS Joueur  dc deux noms
 //   avecDeuxJoueurs = 0 : Joueur VS IA      dc un seul nom
 // a revoir !!!
+
 void saisirNoms(Jeu* jeu, int avecDeuxJoueurs)
 {
     char buf[30];
 
     printf(GRN);
-    printf("%62s========================================\n", "");
-    printf("%62s       Saisie des noms des joueurs\n", "");
-    printf("%62s========================================\n", "");
+    printf("%65s========================================\n", "");
+    printf("%65s       Saisie des noms des joueurs\n", "");
+    printf("%65s========================================\n", "");
     printf(COLOR_RESET);
 
     // Nom du joueur 1 (toujours)
-    printf("%62s", "");
+
+    printf("%65s", "");
     printf(WHT);
     printf(BG_RED);
     printf(" Nom du Joueur 1 (rouge) : ");
     printf(COLOR_RESET);
     printf(" ");
+
     if(fgets(buf, sizeof(buf), stdin) != NULL)
     {
         buf[strcspn(buf, "\n")] = '\0'; // Supprimer le '\n'
+
         if(strlen(buf) > 0)
             strncpy(jeu->J[0].Nom, buf, sizeof(jeu->J[0].Nom) - 1);
+
         // Si vide , on garde "Joueur 1" mis par initJoueur
     }
 
     if(avecDeuxJoueurs == 1)
     {
         // Nom du joueur 2
-        printf("%62s", "");
+        printf("%65s", "");
         printf(WHT);
         printf(BG_BLU);
         printf(" Nom du Joueur 2 (bleu)  : ");
@@ -216,17 +239,38 @@ void saisirNoms(Jeu* jeu, int avecDeuxJoueurs)
     }
     // Si IA : le nom reste "IA" mis par initJoueur
 
-    printf(GRN);
-    printf("%62s========================================\n", "");
+    printf("\n\n%65s========================================\n", "");
     if(avecDeuxJoueurs == 1)
-        printf("%62s  %s (rouge) VS %s (bleu)\n", "",
-               jeu->J[0].Nom, jeu->J[1].Nom);
+    {
+        printf("%72s","");
+        printf(WHT);
+        printf(BG_RED);
+        printf("  %s  ",jeu->J[0].Nom);
+        printf(COLOR_RESET);
+
+        printf("VS");
+
+        printf(WHT);printf(BG_BLU);
+        printf(" %s \n",jeu->J[1].Nom);
+        printf(COLOR_RESET);
+    }
     else
-        printf("%62s  %s (rouge) VS %s (bleu)\n", "",
-               jeu->J[0].Nom, jeu->J[1].Nom);
-    printf("%62s========================================\n", "");
-    printf(COLOR_RESET);
-    system("pause");
+    {
+        printf("%72s","");
+        printf(WHT);
+        printf(BG_RED);
+        printf("  %s  ",jeu->J[0].Nom);
+        printf(COLOR_RESET);
+
+        printf("VS");
+
+        printf(WHT);printf(BG_BLU);
+        printf(" %s \n",jeu->J[1].Nom);
+        printf(COLOR_RESET);
+    }
+    printf("%65s========================================\n", "");
+
+    sleep(1);
     system("cls");
 }
 
@@ -240,24 +284,28 @@ void Jouer()
     {
         case 1:
             printf(YEL);
-            printf("%100s","+------------------------------+\n");
-            printf("%100s","|     1 - Joueur VS Joueur     |\n");
-            printf("%100s","+------------------------------+\n");
+            printf("%103s","+------------------------------+\n");
+            printf("%103s","|     1 - Joueur VS Joueur     |\n");
+            printf("%103s","+------------------------------+\n");
             printf(COLOR_RESET);
+
             initJeu(&jeu, humain, humain);
             saisirNoms(&jeu, 1);           // deux joueurs
             jouerPartie(&jeu);
+
             Jouer();
             break;
         case 2:
             printf(BLU);
-            printf("%100s","+------------------------------+\n");
-            printf("%100s","|   2 - Joueur VS IA SIMPLE    |\n");
-            printf("%100s","+------------------------------+\n");
+            printf("%103s","+------------------------------+\n");
+            printf("%103s","|   2 - Joueur VS IA SIMPLE    |\n");
+            printf("%103s","+------------------------------+\n");
             printf(COLOR_RESET);
+
             initJeu(&jeu, humain, IA_simple);
             saisirNoms(&jeu, 0);           // un seul joueur
             jouerPartie(&jeu);
+
             Jouer();
             break;
         case 3:
@@ -266,9 +314,11 @@ void Jouer()
             printf("%103s","| 3 - Joueur VS IA Difficile   |\n");
             printf("%103s","+------------------------------+\n");
             printf(COLOR_RESET);
+
             initJeu(&jeu, humain, IA_difficile);
             saisirNoms(&jeu, 0);           // un seul joueur
             jouerPartie(&jeu);
+
             Jouer();
             break;
         case 4:
@@ -277,19 +327,21 @@ void Jouer()
             printf("%103s","|      4 - Regles du Jeu       |\n");
             printf("%103s","+------------------------------+\n");
             printf(COLOR_RESET);
+
             printf("\n\n");
             regles();
             printf(BLK);
             system("pause");
             printf(COLOR_RESET);
+
             system("cls");
             Jouer();
             break;
         case 5:
             printf(RED);
-            printf("%100s","+------------------------------+\n");
-            printf("%100s","|         5 - Quitter          |\n");
-            printf("%100s","+------------------------------+\n");
+            printf("%103s","+------------------------------+\n");
+            printf("%103s","|         5 - Quitter          |\n");
+            printf("%103s","+------------------------------+\n");
             printf(COLOR_RESET);
             printf("%92s"," ______     __\n");
             printf("%92s","|  _ \\ \\   / /\n");
@@ -304,7 +356,7 @@ void Jouer()
 // Fonctions de conversion
 char positionVersLettre(int pos)
 {
-    if(pos >= 0 && pos < 24)
+    if(pos >= 0 && pos < Nbr_Cases)
         return 'A' + pos;
     return '?';
 }
@@ -312,15 +364,17 @@ char positionVersLettre(int pos)
 int lettreVersPosition(char lettre)
 {
     lettre = toupper(lettre);
+
     if(lettre >= 'A' && lettre <= 'X')
         return lettre - 'A';
+
     return -1;
 }
 
 // Fonctions du Plateau
 void initPlateau(Plateau* P)
 {
-    int i, j, k;
+    int i, j, k , nbr_lignes;
     char *T[] = {
         "A-----------B-----------C",
         "|           |           |",
@@ -335,57 +389,88 @@ void initPlateau(Plateau* P)
         "G-----------F-----------E"
     };
 
-    for(i = 0; i < (int)(sizeof(T) / sizeof(T[0])); i++)
+    nbr_lignes = (int)(sizeof(T) / sizeof(T[0]));
+
+    for(i = 0; i < nbr_lignes ; i++)
         strcpy(P->Pl[i], T[i]);
 
     for(i = 0; i < Nbr_Cases; i++)
         P->Case[i] = vide;
 
-    P->Moulin[0][0] = 0;  P->Moulin[0][1] = 1;  P->Moulin[0][2] = 2;
-    P->Moulin[1][0] = 4;  P->Moulin[1][1] = 5;  P->Moulin[1][2] = 6;
-    P->Moulin[2][0] = 2;  P->Moulin[2][1] = 3;  P->Moulin[2][2] = 4;
-    P->Moulin[3][0] = 6;  P->Moulin[3][1] = 7;  P->Moulin[3][2] = 0;
-    P->Moulin[4][0] = 8;  P->Moulin[4][1] = 9;  P->Moulin[4][2] = 10;
-    P->Moulin[5][0] = 12; P->Moulin[5][1] = 13; P->Moulin[5][2] = 14;
-    P->Moulin[6][0] = 10; P->Moulin[6][1] = 11; P->Moulin[6][2] = 12;
-    P->Moulin[7][0] = 14; P->Moulin[7][1] = 15; P->Moulin[7][2] = 8;
-    P->Moulin[8][0]  = 16; P->Moulin[8][1]  = 17; P->Moulin[8][2]  = 18;
-    P->Moulin[9][0]  = 20; P->Moulin[9][1]  = 21; P->Moulin[9][2]  = 22;
-    P->Moulin[10][0] = 18; P->Moulin[10][1] = 19; P->Moulin[10][2] = 20;
-    P->Moulin[11][0] = 22; P->Moulin[11][1] = 23; P->Moulin[11][2] = 16;
-    P->Moulin[12][0] = 1;  P->Moulin[12][1] = 9;  P->Moulin[12][2] = 17;
-    P->Moulin[13][0] = 5;  P->Moulin[13][1] = 13; P->Moulin[13][2] = 21;
-    P->Moulin[14][0] = 3;  P->Moulin[14][1] = 11; P->Moulin[14][2] = 19;
-    P->Moulin[15][0] = 7;  P->Moulin[15][1] = 15; P->Moulin[15][2] = 23;
+
+    // LES MOULIN POSSIBLES:
+    for(k =0 ; k < 3 ;k++)
+    {
+        for(j = 0 ; j < 3 ; j++)
+        {
+             for(i = 0 ; i < 3 ; i++)
+             {
+                  P->Moulin [3*k+j][i]=8*k +i + 2*j;
+             }
+         }
+     }
+     for(k = 0 ; k < 3 ; k++)
+     {
+         for(j = 0 ; j < 4 ; j++)
+         {
+                P->Moulin [j+9][k]=8*k + 1 +2*j;
+         }
+      }
+    for(k = 0 ; k < 3 ; k++)
+    {
+        P->Moulin [k+13][0]=8*k;
+        P->Moulin [k+13][1]=8*k + 7;
+        P->Moulin [k+13][2]=8*k + 6;
+    }
+
 
     for(i = 0; i < Nbr_Cases; i++)
         for(j = 0; j < Max_Adjascent; j++)
             P->Adjs[i][j] = -1;
 
-    P->Adjs[0][0] = 1;  P->Adjs[0][1] = 7;
-    P->Adjs[1][0] = 0;  P->Adjs[1][1] = 2;  P->Adjs[1][2] = 9;
-    P->Adjs[2][0] = 1;  P->Adjs[2][1] = 3;
-    P->Adjs[3][0] = 2;  P->Adjs[3][1] = 4;  P->Adjs[3][2] = 11;
-    P->Adjs[4][0] = 3;  P->Adjs[4][1] = 5;
-    P->Adjs[5][0] = 4;  P->Adjs[5][1] = 6;  P->Adjs[5][2] = 13;
-    P->Adjs[6][0] = 5;  P->Adjs[6][1] = 7;
-    P->Adjs[7][0] = 6;  P->Adjs[7][1] = 0;  P->Adjs[7][2] = 15;
-    P->Adjs[8][0] = 9;  P->Adjs[8][1] = 15;
-    P->Adjs[9][0] = 8;  P->Adjs[9][1] = 10; P->Adjs[9][2] = 1;  P->Adjs[9][3] = 17;
-    P->Adjs[10][0] = 9; P->Adjs[10][1] = 11;
-    P->Adjs[11][0] = 10; P->Adjs[11][1] = 12; P->Adjs[11][2] = 3; P->Adjs[11][3] = 19;
-    P->Adjs[12][0] = 11; P->Adjs[12][1] = 13;
-    P->Adjs[13][0] = 12; P->Adjs[13][1] = 14; P->Adjs[13][2] = 5; P->Adjs[13][3] = 21;
-    P->Adjs[14][0] = 13; P->Adjs[14][1] = 15;
-    P->Adjs[15][0] = 14; P->Adjs[15][1] = 8;  P->Adjs[15][2] = 7; P->Adjs[15][3] = 23;
-    P->Adjs[16][0] = 17; P->Adjs[16][1] = 23;
-    P->Adjs[17][0] = 16; P->Adjs[17][1] = 18; P->Adjs[17][2] = 9;
-    P->Adjs[18][0] = 17; P->Adjs[18][1] = 19;
-    P->Adjs[19][0] = 18; P->Adjs[19][1] = 20; P->Adjs[19][2] = 11;
-    P->Adjs[20][0] = 19; P->Adjs[20][1] = 21;
-    P->Adjs[21][0] = 20; P->Adjs[21][1] = 22; P->Adjs[21][2] = 13;
-    P->Adjs[22][0] = 21; P->Adjs[22][1] = 23;
-    P->Adjs[23][0] = 22; P->Adjs[23][1] = 16; P->Adjs[23][2] = 15;
+    //LES ADJASCENTS POSSIBLES POUR CHAQUE PION
+    for(k = 0; k < 12; k++)
+    {
+        P->Adjs [2*k][0]=2*k - 1;
+        P->Adjs [2*k][1]=2*k + 1;
+        P->Adjs [2*k][2]=P->Adjs [2*k][3]= -1;
+    }
+
+    for(k = 0; k < 3; k++)
+    {
+        P->Adjs [8*k][0]=8*k + 7;
+    }
+
+    for(k = 0; k < 4; k++)
+    {
+        P->Adjs [2*k+1][0]= 2*k;
+        P->Adjs [2*k+1][1]= 2*(k + 1);
+        P->Adjs [2*k+1][2]= 2*k + 9;
+        P->Adjs [2*k+1][3]= -1;
+    }
+
+    P->Adjs [7][1]=0;
+
+    for(k = 0; k < 4; k++)
+    {
+        P->Adjs [2*(k+8)+1][0]=2*(k+8);
+        P->Adjs [2*(k+8)+1][1]=2*(k+1+8);
+        P->Adjs [2*(k+8)+1][2]=2*(k+8)+1-8;
+        P->Adjs [2*(k+8)+1][3]=-1;
+    }
+
+    P->Adjs [23][1]=16;
+
+    for(k = 0; k < 4; k++)
+    {
+        P->Adjs [2*k+8+1][0]=2*k+8;
+        P->Adjs [2*k+8+1][1]=2*k+8+2;
+        P->Adjs [2*k+8+1][2]=2*k+8+1-8;
+        P->Adjs [2*k+8+1][3]=2*k+8+1+8;
+    }
+
+    P->Adjs [15][1]=8;
+
 
     for(i = 0; i < Nbr_Cases; i++)
     {
@@ -400,12 +485,13 @@ int PlateauEstVide(const Plateau* P, int pos)
 {
     if(pos < 0 || pos > Nbr_Cases - 1)
         return -1;
+
     return (P->Case[pos] == vide);
 }
 
 void PlacerPionPlateau(Plateau* P, int pos, etatCase e)
 {
-    if(pos >= 0 && pos <= 23)
+    if(pos >= 0 && pos < Nbr_Cases)
         P->Case[pos] = e;
     else
     {
@@ -438,9 +524,10 @@ void SupprimerPionPlateau(Plateau* P, int pos)
 
 void afficherPlateau(const Plateau* P)
 {
-    int i , j , k , pos;
-    char c;
+    int i , j , k , pos , nbrLigne;
+    char c , grille[11][30];
 
+    // Determiner a la main , en utilisant le plateau
     int posLigne[24] = {0,0,0, 5,10,10,10, 5,
                         2,2,2,  5, 8, 8, 8, 5,
                         4,4,4,  5, 6, 6, 6, 5};
@@ -448,19 +535,23 @@ void afficherPlateau(const Plateau* P)
     int posCol[24]   = {0,12,24, 24,24,12,0, 0,
                         4,12,20, 20,20,12,4, 4,
                         8,12,16, 16,16,12,8, 8};
-    char grille[11][30]; // 11 nbr de lignes du plateua
 
 
-    for(i = 0; i < 11; i++)
+    nbrLigne = (int)(sizeof(P->Pl) / sizeof(P->Pl[0]));
+
+
+    for(i = 0; i < nbrLigne; i++)
         strcpy(grille[i], P->Pl[i]);
 
     printf("%70s", "");
     printf("\n");
-    for(i = 0; i < 11; i++)
+
+    for(i = 0; i < nbrLigne; i++)// Parcourir les lignes de la grille
     {
         printf("%70s", "");
-        for(j = 0; j < (int)strlen(grille[i]); j++)
+        for(j = 0; j < (int)strlen(grille[i]); j++)//Parcourir les colonnes de la ligne i
         {
+            // savoir si le caractere est une lettre de A...X ou autre chose
             c = grille[i][j];
             pos = -1;
             for(k = 0; k < Nbr_Cases; k++)
@@ -495,7 +586,7 @@ void afficherPlateau(const Plateau* P)
                 }
             }
             else
-                printf("%c", c);
+                printf("%c", c);// soit ' ' ou '-'
         }
         printf("\n");
     }
@@ -514,7 +605,7 @@ void afficherEtat(const Jeu* jeu)
     printf("[%s : %d pions]", jeu->J[0].Nom, jeu->J[0].nbrPionPlateau);
     printf(COLOR_RESET);
 
-    // Joueur 2
+    // Joueur 2( humain ou IA)
     printf(WHT);
     printf(BG_BLU);
     printf("[%s : %d pions]", jeu->J[1].Nom, jeu->J[1].nbrPionPlateau);
@@ -525,6 +616,7 @@ void afficherEtat(const Jeu* jeu)
 int verifieMoulin(const Plateau* p, int pos, etatCase e)
 {
     int i, j;
+
     for(i = 0; i < Nbr_Moulin; i++)
         for(j = 0; j < 3; j++)
             if(p->Moulin[i][j] == pos)
@@ -571,8 +663,8 @@ int estCapturable(const Plateau* p, int pos, etatCase e)
     for(i = 0; i < Nbr_Cases; i++)
         if(p->Case[i] == e && verifieMoulin(p, i, e) == 0)
             cnt++;
-    // si tous les pions adverses forme un moulin
 
+    // si tous les pions adverses forme un moulin
     if(cnt == 0)
         return 1;
 
@@ -639,7 +731,12 @@ void initJoueur(Joueur* j, int id, typeJoueur type)
         if(type == humain)
             strcpy(j->Nom, "Joueur 2");
         else
-            strcpy(j->Nom, "IA");
+        {
+            if(type == IA_difficile)
+                strcpy(j->Nom, "IA_DIFFICILE");
+            else
+                strcpy(j->Nom, "IA_SIMPLE");
+        }
     }
 }
 
@@ -677,10 +774,10 @@ int verifierGagnant(const Jeu* jeu)
     if(jeu->phase != Placement)
     {
         if(jeu->J[0].nbrPionPlateau < 3)
-            return 2;
+            return 2;// 2eme joueur gagne
 
         if(jeu->J[1].nbrPionPlateau < 3)
-            return 1;
+            return 1;// 1er joueur gagne
     }
     return -1;
 }
@@ -723,6 +820,7 @@ void gererCapture(Jeu* jeu)
 
     SupprimerPionPlateau(&jeu->P, pos);
     jeu->J[adversaire].nbrPionPlateau--;
+
     printf("%70s", "");
     printf(GRN);
     printf("Pion %c capture !\n", lettre);
@@ -742,7 +840,7 @@ void tourHumainPlacement(Jeu* jeu)
 
     do {
         printf("%70s", "");
-        printf("Choisir une position (A-X): ");
+        printf("Choisir une position entre (A-...-X): ");
         scanf(" %c", &lettre);
         while(getchar() != '\n');
 
@@ -790,7 +888,7 @@ void tourHumainDeplacement(Jeu* jeu)
 
     do {
         printf("%70s", "");
-        printf("Choisir un de vos pions a deplacer (A-X): ");
+        printf("Choisir un de vos pions a deplacer entre (A-...-X): ");
         scanf(" %c", &lettreDepart);
         while(getchar() != '\n');
 
@@ -827,11 +925,12 @@ void tourHumainDeplacement(Jeu* jeu)
 
     do {
         printf("%70s", "");
-        printf("Choisir la destination (A-X): ");
+        printf("Choisir la destination entre (A-...-X): ");
         scanf(" %c", &lettreArrivee);
         while(getchar() != '\n');
 
         posArrivee = lettreVersPosition(lettreArrivee);
+
         valide = (jeu->phase == Vol)
             ? Volvalide(&jeu->P, posDepart, posArrivee, pionCourant)
             : mouvementValide(&jeu->P, posDepart, posArrivee, pionCourant);
@@ -856,7 +955,7 @@ void tourHumainDeplacement(Jeu* jeu)
     }
 }
 
-static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,char nomJ1[30], char nomJ2[30])
+static int afficherFinPartie(Jeu* jeu)
 {
     int choix;
 
@@ -869,17 +968,19 @@ static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,char nomJ1[3
     printf("%62s       %s GAGNE LA PARTIE !\n", "", jeu->J[jeu->Gagnant - 1].Nom);
     printf("%62s========================================\n", "");
     printf(COLOR_RESET);
-    system("pause");
+    sleep(1);
 
     printf(GRN);
     printf("%62s========================================\n", "");
     printf("%62s        Que voulez-vous faire ?\n", "");
     printf("%62s========================================\n", "");
     printf(COLOR_RESET);
+
     printf(YEL);
     printf("%62s| 1 - Retourner au menu principal      |\n", "");
     printf("%62s| 2 - Quitter le jeu                   |\n", "");
     printf(COLOR_RESET);
+
     printf(GRN);
     printf("%62s========================================\n", "");
     printf(COLOR_RESET);
@@ -899,16 +1000,13 @@ static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,char nomJ1[3
     else
     {
         printf(RED);
-        printf("%100s","+------------------------------+\n");
-        printf("%100s","|         5 - Quitter          |\n");
-        printf("%100s","+------------------------------+\n");
-        printf(COLOR_RESET);
         printf("%92s"," ______     __\n");
         printf("%92s","|  _ \\ \\   / /\n");
         printf("%92s","| |_) \\ \\_/ / \n");
         printf("%92s","|  _ < \\   /  \n");
         printf("%92s","| |_) | | |   \n");
         printf("%93s","|____/  |_|    \n");
+        printf(COLOR_RESET);
         exit(0);
     }
     return 0;
@@ -917,13 +1015,6 @@ static int afficherFinPartie(Jeu* jeu, typeJoueur t1, typeJoueur t2,char nomJ1[3
 void jouerPartie(Jeu* jeu)
 {
     int adversaire , posDepart, posArrivee , i , pos , c , idxPerdant , gagnant,tentatives;
-    typeJoueur t1 = jeu->J[0].type;
-    typeJoueur t2 = jeu->J[1].type;
-
-    // Sauvegarder les noms pour les conserver lors du rejeu
-    char nomJ1[30], nomJ2[30];
-    strncpy(nomJ1, jeu->J[0].Nom, 29);
-    strncpy(nomJ2, jeu->J[1].Nom, 29);
 
     while(1) // Boucle de rejeu
     {
@@ -949,21 +1040,20 @@ void jouerPartie(Jeu* jeu)
                     printf("%62s%s est bloque, aucun mouvement possible !\n",
                            "", jeu->J[jeu->JoueurCourant].Nom);
                     printf(COLOR_RESET);
-                    system("pause");
+                    sleep(2);
 
-                    if(!afficherFinPartie(jeu, t1, t2, nomJ1, nomJ2))
+                    if(!afficherFinPartie(jeu))
                         return;
                     break;
                 }
             }
 
-            // Annonce passage en phase Vol
+            // Passage en phase Vol
             if(jeu->phase == Vol)
             {
                 printf("%62s", "");
                 printf(MAG);
-                printf("%s passe en PHASE DE VOL (3 pions restants) !\n",
-                       jeu->J[jeu->JoueurCourant].Nom);
+                printf("%s passe en PHASE DE VOL (3 pions restants) !\n", jeu->J[jeu->JoueurCourant].Nom);
                 printf(COLOR_RESET);
             }
 
@@ -981,11 +1071,13 @@ void jouerPartie(Jeu* jeu)
                     printf(CYN);
                     printf("IA Difficile reflechit...\n");
                     printf(COLOR_RESET);
+
                     Coup coup = meilleurCoupIA(jeu);
                     PlacerPionPlateau(&jeu->P, coup.arrivee, pionCourant);
                     jeu->J[jeu->JoueurCourant].nbrPionPlacer++;
                     jeu->J[jeu->JoueurCourant].nbrPionPlateau++;
                     printf("%70s", "");
+
                     printf("IA Difficile place un pion en %c\n", positionVersLettre(coup.arrivee));
                     if(coup.capture != -1)
                     {
@@ -1003,16 +1095,18 @@ void jouerPartie(Jeu* jeu)
                     pos;
 
                     do {
-                            pos = rand() % Nbr_Cases;
+                            pos = rand() % Nbr_Cases; // Un nbr aleatoire entre 0 et 23
 
                     }while(!PlateauEstVide(&jeu->P, pos));
 
                     PlacerPionPlateau(&jeu->P, pos, pionCourant);
                     jeu->J[jeu->JoueurCourant].nbrPionPlacer++;
                     jeu->J[jeu->JoueurCourant].nbrPionPlateau++;
+
                     printf("%70s", "");
                     printf("IA place un pion en %c\n", positionVersLettre(pos));
                     system("pause");
+
                     if(verifieMoulin(&jeu->P, pos, pionCourant))
                     {
                         adversaire = 1 - jeu->JoueurCourant;
@@ -1044,12 +1138,13 @@ void jouerPartie(Jeu* jeu)
                     printf(CYN);
                     printf("IA Difficile reflechit...\n");
                     printf(COLOR_RESET);
+
                     Coup coup = meilleurCoupIA(jeu);
                     SupprimerPionPlateau(&jeu->P, coup.depart);
                     PlacerPionPlateau(&jeu->P, coup.arrivee, pionCourant);
+
                     printf("%70s", "");
-                    printf("IA Difficile deplace de %c vers %c\n",
-                           positionVersLettre(coup.depart), positionVersLettre(coup.arrivee));
+                    printf("IA Difficile deplace de %c vers %c\n", positionVersLettre(coup.depart), positionVersLettre(coup.arrivee));
                     if(coup.capture != -1)
                     {
                         adversaire = 1 - jeu->JoueurCourant;
@@ -1133,7 +1228,7 @@ void jouerPartie(Jeu* jeu)
                        jeu->J[idxPerdant].Nom);
                 printf(COLOR_RESET);
 
-                if(!afficherFinPartie(jeu, t1, t2, nomJ1, nomJ2))
+                if(!afficherFinPartie(jeu))
                     return;
                 break;
             }
@@ -1141,13 +1236,13 @@ void jouerPartie(Jeu* jeu)
             changerJoueurJeu(jeu);
         }
 
-        if(!jeu->FinJeu) break;
+        if(!jeu->FinJeu)
+            break;
     }
 }
 
 
 // IA DIFFICILE - ALGORITHME MINIMAX AVEC ELAGAGE ALPHA-BETA
-
 
 void copierJeu(const Jeu* src, Jeu* dst)
 {
